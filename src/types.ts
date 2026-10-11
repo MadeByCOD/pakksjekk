@@ -10,7 +10,10 @@ export interface InventoryItem {
 }
 
 export interface PackingListEntry {
-  itemId: string
+  key: string
+  itemId?: string
+  adHocName?: string
+  adHocWeightGrams?: number
   quantity: number
 }
 

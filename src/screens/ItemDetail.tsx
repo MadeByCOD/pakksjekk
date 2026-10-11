@@ -1,15 +1,24 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { db } from '../db'
 import { compressImage, blobToObjectUrl } from '../utils/image'
 import { wouldCreateDependencyCycle } from '../utils/weight'
 import type { InventoryItem } from '../types'
 
+interface PackingListPrefillState {
+  prefillName?: string
+  prefillWeightGrams?: number
+  returnToListId?: string
+  returnToListKey?: string
+}
+
 export default function ItemDetail() {
   const { itemId } = useParams()
   const isNew = !itemId || itemId === 'ny'
   const navigate = useNavigate()
+  const location = useLocation()
+  const prefill = isNew ? ((location.state as PackingListPrefillState | null) ?? null) : null
 
   const existing = useLiveQuery(
     () => (isNew ? undefined : db.items.get(itemId!)),
@@ -17,9 +26,9 @@ export default function ItemDetail() {
   )
   const allItems = useLiveQuery(() => db.items.toArray(), []) ?? []
 
-  const [name, setName] = useState('')
+  const [name, setName] = useState(() => prefill?.prefillName ?? '')
   const [category, setCategory] = useState('')
-  const [weightGrams, setWeightGrams] = useState(0)
+  const [weightGrams, setWeightGrams] = useState(() => prefill?.prefillWeightGrams ?? 0)
   const [quantityOwned, setQuantityOwned] = useState(1)
   const [notes, setNotes] = useState('')
   const [dependencyIds, setDependencyIds] = useState<string[]>([])
@@ -90,7 +99,22 @@ export default function ItemDetail() {
     }
 
     if (isNew) {
-      await db.items.add({ id: crypto.randomUUID(), ...payload })
+      const newId = crypto.randomUUID()
+      await db.items.add({ id: newId, ...payload })
+
+      if (prefill?.returnToListId && prefill.returnToListKey) {
+        const targetList = await db.lists.get(prefill.returnToListId)
+        if (targetList) {
+          const nextEntries = targetList.entries.map((e) =>
+            e.key === prefill.returnToListKey
+              ? { key: e.key, itemId: newId, quantity: e.quantity }
+              : e,
+          )
+          await db.lists.update(targetList.id, { entries: nextEntries, updatedAt: Date.now() })
+        }
+        navigate(`/liste/${prefill.returnToListId}`)
+        return
+      }
     } else {
       await db.items.update(itemId!, payload)
     }
@@ -137,8 +161,11 @@ export default function ItemDetail() {
 
   return (
     <div>
-      <Link className="back-link" to="/inventar">
-        ← Tilbake til inventar
+      <Link
+        className="back-link"
+        to={prefill?.returnToListId ? `/liste/${prefill.returnToListId}` : '/inventar'}
+      >
+        {prefill?.returnToListId ? '← Tilbake til pakklisten' : '← Tilbake til inventar'}
       </Link>
       <h1>{isNew ? 'Nytt utstyr' : 'Rediger utstyr'}</h1>
 
