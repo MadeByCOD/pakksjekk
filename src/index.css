@@ -1,0 +1,370 @@
+:root {
+  --color-bg: #f5f3ee;
+  --color-surface: #ffffff;
+  --color-border: #ddd8cc;
+  --color-text: #22241f;
+  --color-text-muted: #6b6a5f;
+  --color-brand: #2f5233;
+  --color-brand-text: #ffffff;
+  --color-danger: #a4342a;
+  --color-warning-bg: #fbe9c8;
+  --color-warning-border: #e0a930;
+  --color-warning-text: #5c4113;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #15170f;
+    --color-surface: #1f2219;
+    --color-border: #343826;
+    --color-text: #ecebe3;
+    --color-text-muted: #a5a492;
+    --color-brand: #5f9468;
+    --color-brand-text: #0c140d;
+    --color-danger: #e0695d;
+    --color-warning-bg: #3a3014;
+    --color-warning-border: #8a6a1f;
+    --color-warning-text: #f0d9a0;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--color-bg);
+  padding-top: env(safe-area-inset-top);
+}
+
+.bottom-nav {
+  display: flex;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.6rem 0 0.5rem;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.bottom-nav a.active {
+  color: var(--color-brand);
+  font-weight: 600;
+}
+
+.bottom-nav .icon {
+  font-size: 1.3rem;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 0 0 0.75rem;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+}
+
+.page-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  background: var(--color-brand);
+  color: var(--color-brand-text);
+  font-weight: 600;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--color-brand);
+  border: 1.5px solid var(--color-brand);
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  padding: 0.4rem 0.6rem;
+  font-weight: 500;
+}
+
+button.danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='search'],
+textarea,
+select {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-bottom: 0.7rem;
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--color-bg);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  border: 1px solid var(--color-border);
+}
+
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-meta {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.chip {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 2.5rem 1rem;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.stepper button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 999px;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.stepper .count {
+  min-width: 1.4rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.sticky-summary {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sticky-summary .weight-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-brand);
+}
+
+.warning-banner {
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning-text);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.warning-banner strong {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.warning-banner ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.search-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.search-row select {
+  width: auto;
+  flex-shrink: 0;
+}
+
+.photo-input {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.photo-preview {
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.checkbox-row:last-child {
+  border-bottom: none;
+}
+
+.inline-edit-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.actions-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.actions-row button {
+  flex: 1;
+}
+
+.back-link {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
