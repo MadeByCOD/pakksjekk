@@ -1,12 +1,20 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { clearSearchSettings, getSearchSettings, saveSearchSettings } from '../utils/settings'
+import { clearDomainHits, getDomainHits } from '../utils/searchStats'
 
 export default function Settings() {
   const existing = getSearchSettings()
   const [apiKey, setApiKey] = useState(existing?.apiKey ?? '')
   const [searchEngineId, setSearchEngineId] = useState(existing?.searchEngineId ?? '')
   const [saved, setSaved] = useState(false)
+  const [domainHits, setDomainHits] = useState(() => getDomainHits())
+
+  function handleClearStats() {
+    if (!confirm('Nullstille treff-statistikken?')) return
+    clearDomainHits()
+    setDomainHits([])
+  }
 
   function handleSave() {
     if (!apiKey.trim() || !searchEngineId.trim()) {
@@ -43,7 +51,8 @@ export default function Settings() {
             <a href="https://programmablesearchengine.google.com/" target="_blank" rel="noreferrer">
               programmablesearchengine.google.com
             </a>{' '}
-            og opprett et nytt søk. Velg «Søk på hele nettet».
+            og opprett et nytt søk. Google krever nå en liste med nettsteder (opptil 50) i stedet
+            for «hele nettet» — legg inn en liste med jakt-/friluftsbutikker og merkevaresider.
           </li>
           <li>Kopier «Søkemotor-ID»-en (cx) fra kontrollpanelet og lim inn under.</li>
           <li>
@@ -94,6 +103,30 @@ export default function Settings() {
         Nøkkelen lagres kun lokalt på denne telefonen, aldri i koden eller i skyen. Google sin
         gratiskvote er 100 søk per dag.
       </p>
+
+      <h2 style={{ marginTop: '2rem' }}>Treff-statistikk</h2>
+      <p className="card-meta">
+        Hvilke nettsteder du faktisk har valgt som riktig treff når du har søkt etter utstyr — bruk
+        dette til å justere listen med nettsteder i Google-oppsettet. Statistikken ligger kun på
+        denne telefonen.
+      </p>
+      {domainHits.length === 0 ? (
+        <p className="card-meta">Ingen treff registrert ennå.</p>
+      ) : (
+        <div className="card">
+          {domainHits.map((hit) => (
+            <div className="card-row" key={hit.domain} style={{ justifyContent: 'space-between' }}>
+              <span>{hit.domain}</span>
+              <span className="chip">{hit.count}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {domainHits.length > 0 && (
+        <button className="ghost" onClick={handleClearStats}>
+          Nullstill statistikk
+        </button>
+      )}
     </div>
   )
 }

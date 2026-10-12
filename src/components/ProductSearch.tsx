@@ -11,6 +11,7 @@ import {
   type ImageResult,
   type ProductResult,
 } from '../utils/productSearch'
+import { recordDomainHit } from '../utils/searchStats'
 
 interface ProductSearchProps {
   onApplyNameAndWeight: (name: string, weightGrams: number | null) => void
@@ -81,6 +82,7 @@ export default function ProductSearch({
   function pickResult(result: ProductResult) {
     const weight = guessWeightGrams(result.snippet)
     onApplyNameAndWeight(cleanTitle(result.title), weight)
+    recordDomainHit(result.displayLink)
   }
 
   async function pickImage(image: ImageResult) {
