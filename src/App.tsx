@@ -3,6 +3,7 @@ import Home from './screens/Home'
 import Inventory from './screens/Inventory'
 import ItemDetail from './screens/ItemDetail'
 import PackingListEditor from './screens/PackingListEditor'
+import Settings from './screens/Settings'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/inventar" element={<Inventory />} />
             <Route path="/utstyr/ny" element={<ItemDetail />} />
             <Route path="/utstyr/:itemId" element={<ItemDetail />} />
+            <Route path="/innstillinger" element={<Settings />} />
           </Routes>
         </main>
         <nav className="bottom-nav">

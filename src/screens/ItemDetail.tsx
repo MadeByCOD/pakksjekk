@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { db } from '../db'
 import { compressImage, blobToObjectUrl } from '../utils/image'
 import { wouldCreateDependencyCycle } from '../utils/weight'
+import ProductSearch from '../components/ProductSearch'
 import type { InventoryItem } from '../types'
 
 interface PackingListPrefillState {
@@ -168,6 +169,17 @@ export default function ItemDetail() {
         {prefill?.returnToListId ? '← Tilbake til pakklisten' : '← Tilbake til inventar'}
       </Link>
       <h1>{isNew ? 'Nytt utstyr' : 'Rediger utstyr'}</h1>
+
+      {isNew && (
+        <ProductSearch
+          confirmedName={name.trim() ? name.trim() : null}
+          onApplyNameAndWeight={(foundName, foundWeight) => {
+            setName(foundName)
+            if (foundWeight !== null) setWeightGrams(foundWeight)
+          }}
+          onApplyPhoto={(foundPhoto) => setPhoto(foundPhoto)}
+        />
+      )}
 
       <div className="field">
         <label>Navn</label>

@@ -82,6 +82,10 @@ export default function Inventory() {
           </div>
         </div>
       ))}
+
+      <button className="ghost" style={{ marginTop: '0.5rem' }} onClick={() => navigate('/innstillinger')}>
+        ⚙ Produktsøk-innstillinger
+      </button>
     </div>
   )
 }
